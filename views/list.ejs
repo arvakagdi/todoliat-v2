@@ -6,10 +6,15 @@
 
   <div class="box">
       <%newListItems.forEach(function(item){ %>
-        <div class="item">
-          <input type="checkbox">
-           <p><%= item.name  %></p>   <!--accessing only the name from the data object passed -->
-        </div>
+
+        <!--Adding delete functionality by adding a form around checkbox and adding a submit method to checkbox-->
+        <form action="/delete" method="post">    
+          <div class="item">
+            <input type="checkbox" name = "checkbox" value=<%=item._id%> onChange="this.form.submit()">
+             <p><%= item.name  %></p>   <!--accessing only the name from the data object passed -->
+          </div>
+        </form>
+ 
       <%})%>
 
       <form class="item" action="/" method="post">

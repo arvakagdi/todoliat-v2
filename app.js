@@ -71,18 +71,33 @@ app.get("/", function(req, res) {
 
 });
 
+
 app.post("/", function(req, res){
 
-  const item = req.body.newItem;
+  const itemName = req.body.newItem;
+  const newitem = new Item({
+    name:itemName
+  }); 
 
-  if (req.body.list === "Work") {
-    workItems.push(item);
-    res.redirect("/work");
-  } else {
-    items.push(item);
-    res.redirect("/");
-  }
+  newitem.save();
+  res.redirect("/");
 });
+
+
+// when an item is checked off, we added action to /delete and now we can access _id of the item checked through the chdeckbox value
+app.post("/delete", function(req,res){
+  const deleteItemID = req.body.checkbox    // get the id
+  Item.deleteOne({_id:deleteItemID}, function(err){   //delete the entry
+    if(err){
+      console.log(err);
+    }else{
+      console.log("deleted successfully!");
+    }
+  });
+  res.redirect("/");    //redirect on homepage to see changes
+});
+
+
 
 app.get("/work", function(req,res){
   res.render("list", {listTitle: "Work List", newListItems: workItems});
