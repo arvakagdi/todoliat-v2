@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});    //create database named todoDB and connect to mongodb server
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true });    //create database named todoDB and connect to mongodb server
 
 // create a mongoose schema
 const itemsSchema = new mongoose.Schema({
@@ -42,20 +42,32 @@ const item3 = new Item({
 
 const defaultItems = [item1,item2,item3];
 
-// Inserting default items to the items collection
-Item.insertMany(defaultItems, function(err){
-  if(err){
-    console.log(err);
-  }else{
-    console.log('update default items to DB successfully.');
-  }
-})
 
 
 app.get("/", function(req, res) {
+  Item.find({},function(err,foundItems){
 
+    // we need to make a check on found items as if we keep the insertMany without nay check we will keep adding the default items
+    // every time we access the server. So if we don't have anything in our list we add the default items to the list and redirect to the main page
+    // now when we reach main page we do have find items so we will go to else and render the list.ejs page
 
-  res.render("list", {listTitle: "Today", newListItems: items});
+    if (foundItems.length === 0){  
+      // Inserting default items to the items collection
+      Item.insertMany(defaultItems, function(err){
+        if(err){
+          console.log(err);
+        }else{
+          console.log('update default items to DB successfully.');
+        }
+      })
+      res.redirect("/");      //redirect to home page    
+    }
+    else{
+      res.render("list", {listTitle: "Today", newListItems: foundItems});
+    }
+
+  })
+  
 
 });
 
