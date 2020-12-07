@@ -51,6 +51,17 @@ const listSchema = new mongoose.Schema({    // Make a new list Schema
 
 const List = mongoose.model("list", listSchema);  // model for lists
 
+
+const today1 = new Date();   
+const options= {      // options for getting date in different format
+    weekday:"long",
+    day: "numeric",
+    month: "long"
+};
+
+const today =  today1.toLocaleString("en-US", options); // converting date to string formate using options
+
+
 app.get("/", function(req, res) {
   Item.find({},function(err,foundItems){
 
@@ -70,7 +81,7 @@ app.get("/", function(req, res) {
       res.redirect("/");      //redirect to home page    
     }
     else{
-      res.render("list", {listTitle: "Today", newListItems: foundItems});
+      res.render("list", {listTitle: today, newListItems: foundItems});
     }
 
   })
@@ -87,7 +98,7 @@ app.post("/", function(req, res){
     name:itemName
   }); 
 
-  if (listName === "Today"){    // If it is the home page save the item to items collection
+  if (listName === today){    // If it is the home page save the item to items collection
     newitem.save();
     res.redirect("/");
   }
@@ -110,7 +121,7 @@ app.post("/delete", function(req,res){
   const deleteItemID = req.body.checkbox;    // get the id
   const listName = req.body.listName;
 
-  if (listName === "Today"){    // if request was made from home page, delete from items collection
+  if (listName === today){    // if request was made from home page, delete from items collection
     Item.deleteOne({_id:deleteItemID}, function(err){   //delete the entry
       if(!err){
         console.log("deleted successfully!");
