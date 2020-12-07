@@ -1,7 +1,14 @@
 <%- include("header") -%>
 
+  <form action="/about">
+    <input class="about" type="submit" value="About" />
+  </form>
+
+<!-- <a href="/about">ABOUT</a> -->
+
   <div class="box" id="heading">
     <h1> <%= listTitle %> </h1>
+
   </div>
 
   <div class="box">
@@ -13,6 +20,7 @@
             <input type="checkbox" name = "checkbox" value=<%=item._id%> onChange="this.form.submit()">
              <p><%= item.name  %></p>   <!--accessing only the name from the data object passed -->
           </div>
+          <input type="hidden" name="listName" value="<%=listTitle%>"></input>  <!--adding a hidden value to  access list title to perform delete on all pages-->
         </form>
  
       <%})%>
@@ -24,3 +32,6 @@
   </div>
 
 <%- include("footer") -%>
+
+
+                  

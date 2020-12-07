@@ -2,12 +2,13 @@
 // Please run npm i from the folder to install node_modules the first time you run the project
 // Also in this version I am working on using database for my todo list. For detailed commented version of todo list refer to todolist v1 repo
 
-
 //jshint esversion:6
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+
+const _ = require("lodash");
 
 const app = express();
 
@@ -106,21 +107,33 @@ app.post("/", function(req, res){
 
 // when an item is checked off, we added action to /delete and now we can access _id of the item checked through the chdeckbox value
 app.post("/delete", function(req,res){
-  const deleteItemID = req.body.checkbox    // get the id
-  Item.deleteOne({_id:deleteItemID}, function(err){   //delete the entry
-    if(err){
-      console.log(err);
-    }else{
-      console.log("deleted successfully!");
-    }
-  });
-  res.redirect("/");    //redirect on homepage to see changes
+  const deleteItemID = req.body.checkbox;    // get the id
+  const listName = req.body.listName;
+
+  if (listName === "Today"){    // if request was made from home page, delete from items collection
+    Item.deleteOne({_id:deleteItemID}, function(err){   //delete the entry
+      if(!err){
+        console.log("deleted successfully!");
+        res.redirect("/");    //redirect on homepage to see changes
+      }
+    });
+  }
+  else{  // if req was made from any other page
+    List.findOneAndUpdate({name:listName},{$pull: {items:{_id:deleteItemID}}},function(err, foundList){
+      if(!err){
+        res.redirect("/" + listName)
+      }
+    });
+  }
 });
 
 
+app.get("/about", function(req, res){
+  res.render("about");
+});
 
 app.get("/:customListName", function(req,res){      // express route parameter 
-  const customListName = req.params.customListName;
+  const customListName = _.capitalize(req.params.customListName);
 
   List.findOne({name:customListName},function(err,result){
     if(!err){
@@ -128,7 +141,7 @@ app.get("/:customListName", function(req,res){      // express route parameter
         const list = new List({                              
           name:customListName,
           items: defaultItems
-        })
+        })  
         list.save();
         res.redirect("/" + customListName);
       }
@@ -140,11 +153,6 @@ app.get("/:customListName", function(req,res){      // express route parameter
 
 });
 
-
-
-app.get("/about", function(req, res){
-  res.render("about");
-});
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
