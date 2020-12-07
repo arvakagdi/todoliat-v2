@@ -12,3 +12,4 @@ Cloning and downloading instructions:
 Please run npm i from the folder to install node_modules the first time you run the project
 Also in this version I am working on using database for my todo list. For detailed commented version of todo list refer to todolist- v1 repository 
 
+![image](todoListv2.png)
