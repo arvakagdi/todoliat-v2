@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb+srv://arvakagdi:Kamaajsaar123@cluster0.93x07.mongodb.net/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true });    //create database named todoDB and connect to mongodb server
+mongoose.connect("mongodb+srv://<username>:<password>@cluster0.93x07.mongodb.net/<dbname>", {useNewUrlParser: true, useUnifiedTopology: true });    //create database named todoDB and connect to mongodb server
 
 // create a mongoose schema
 const itemsSchema = new mongoose.Schema({
