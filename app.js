@@ -161,6 +161,13 @@ app.get("/:customListName", function(req,res){      // express route parameter
 });
 
 
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
+
+//Listening on correct port 
+let port = process.env.PORT;  //port env
+if (port == null || port == "") {   
+  port = 3000;
+}
+
+app.listen(port, function() {
+  console.log("Server started successfully!");
 });
