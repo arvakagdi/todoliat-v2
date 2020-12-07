@@ -1,4 +1,4 @@
-# todoliat-v2
+# todolist-v2
 Created a todo list website - [todolist](https://pure-ocean-24769.herokuapp.com/)
 Includes fucntionality of deleting and adding items. We can also create multiple lists. 
 
