@@ -1,7 +1,3 @@
-// README
-// Please run npm i from the folder to install node_modules the first time you run the project
-// Also in this version I am working on using database for my todo list. For detailed commented version of todo list refer to todolist v1 repo
-
 //jshint esversion:6
 
 const express = require("express");
@@ -17,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true });    //create database named todoDB and connect to mongodb server
+mongoose.connect("mongodb+srv://arvakagdi:Kamaajsaar123@cluster0.93x07.mongodb.net/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true });    //create database named todoDB and connect to mongodb server
 
 // create a mongoose schema
 const itemsSchema = new mongoose.Schema({
