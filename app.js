@@ -76,15 +76,31 @@ app.get("/", function(req, res) {
 });
 
 
+//changing the post method to post to multiple list pages
 app.post("/", function(req, res){
 
   const itemName = req.body.newItem;
+  const listName = req.body.list
+
   const newitem = new Item({
     name:itemName
   }); 
 
-  newitem.save();
-  res.redirect("/");
+  if (listName === "Today"){    // If it is the home page save the item to items collection
+    newitem.save();
+    res.redirect("/");
+  }
+
+  // If req was from any other page, find the item and add the curr item to the item list of the item
+  else{
+    List.findOne({name:listName},function(err,result){
+      if(!err){
+        result.items.push(newitem)   // as the List collection's items is of type itemSchema
+        result.save();
+        res.redirect("/" + listName)
+      }
+    });
+  }
 });
 
 
