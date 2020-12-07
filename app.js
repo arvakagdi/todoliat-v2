@@ -43,6 +43,12 @@ const item3 = new Item({
 const defaultItems = [item1,item2,item3];
 
 
+const listSchema = new mongoose.Schema({    // Make a new list Schema 
+  name:String,
+  items:[itemsSchema]     // item will refer to itemSchema
+})
+
+const List = mongoose.model("list", listSchema);  // model for lists
 
 app.get("/", function(req, res) {
   Item.find({},function(err,foundItems){
@@ -67,8 +73,6 @@ app.get("/", function(req, res) {
     }
 
   })
-  
-
 });
 
 
@@ -99,9 +103,28 @@ app.post("/delete", function(req,res){
 
 
 
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
+app.get("/:customListName", function(req,res){      // express route parameter 
+  const customListName = req.params.customListName;
+
+  List.findOne({name:customListName},function(err,result){
+    if(!err){
+      if(!result){
+        const list = new List({                              
+          name:customListName,
+          items: defaultItems
+        })
+        list.save();
+        res.redirect("/" + customListName);
+      }
+      else{
+        res.render("list", {listTitle: result.name, newListItems: result.items});
+      }
+    }
+  });
+
 });
+
+
 
 app.get("/about", function(req, res){
   res.render("about");
